@@ -265,11 +265,17 @@ def index():
 
     # 继续观看
     Resumes = MediaServer().get_resume()
-    Resumes = filter(lambda x: x.get("type") in selected_librarys, Resumes) or []
+    Resumes = list(filter(lambda x: x.get("type") in selected_librarys, Resumes)) or []
 
     # 最近添加
     Latests = MediaServer().get_latest()
-    Latests = filter(lambda x: x.get("type") in selected_librarys, Latests) or []
+    Latests = list(filter(lambda x: x.get("type") in selected_librarys, Latests)) or []
+
+    params = {}
+    if len(Resumes) > 0:
+        params["Resumes"] = Resumes
+    if len(Latests) > 0:
+        params["Latests"] = Latests
 
     return render_template("index.html",
                            ServerSucess=ServerSucess,
@@ -286,8 +292,7 @@ def index():
                            MediaServerType=MSType,
                            Librarys=Librarys,
                            LibrarySyncConf=LibrarySyncConf,
-                           Resumes=Resumes,
-                           Latests=Latests
+                            **params
                            )
 
 
